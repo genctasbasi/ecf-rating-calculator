@@ -1,0 +1,190 @@
+<div id="ecf-widget" style="max-width:720px;padding:16px;border:1px solid #ddd;border-radius:12px;">
+    <h3 style="margin:0 0 12px 0;">ECF K Rating Delta Calculator</h3>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+            <label>Player 1 rating</label><br />
+            <input id="p1Rating" type="number" value="1680" style="width:100%;padding:8px;" />
+        </div>
+        <div>
+            <label>Player 2 rating</label><br />
+            <input id="p2Rating" type="number" value="1603" style="width:100%;padding:8px;" />
+        </div>
+
+        <div>
+            <label>Player 1 junior</label><br />
+            <select id="p1Junior" style="width:100%;padding:8px;">
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
+        <div>
+            <label>Player 2 junior</label><br />
+            <select id="p2Junior" style="width:100%;padding:8px;">
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Result for Player 1</label><br />
+            <select id="resultP1" style="width:100%;padding:8px;">
+                <option value="WIN">Win</option>
+                <option value="DRAW">Draw</option>
+                <option value="LOSS">Loss</option>
+            </select>
+        </div>
+        <div>
+            <label>Games this month (Player 1)</label><br />
+            <input id="p1Games" type="number" min="1" value="1" style="width:100%;padding:8px;" />
+        </div>
+
+        <div>
+            <label>Games this month (Player 2)</label><br />
+            <input id="p2Games" type="number" min="1" value="1" style="width:100%;padding:8px;" />
+        </div>
+
+        <div style="display:flex;align-items:end;">
+            <button id="calcBtn"
+                style="width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
+                Calculate
+            </button>
+        </div>
+    </div>
+
+    <div id="out" style="margin-top:14px;padding:12px;border-radius:10px;background:#fafafa;">
+        Enter values and press Calculate.
+    </div>
+
+    <div style="margin-top:10px;font-size:12px;color:#555;">
+        Note: D offset table and K rules match the Kotlin code you posted.
+    </div>
+</div>
+
+<script>
+    (() => {
+        const WIN_OFFSET = 10.0;
+        const DRAW_OFFSET = 0.0;
+        const LOSS_OFFSET = -10.0;
+
+        const INCREMENT_DIVISOR = 20.0;
+        const K_CAP_TOTAL = 700.0;
+
+        const D_OFFSET_TABLE = [
+            [0, 3, 0.0],
+            [4, 10, 0.2],
+            [11, 17, 0.4],
+            [18, 25, 0.6],
+            [26, 32, 0.8],
+            [33, 39, 1.0],
+            [40, 46, 1.2],
+            [47, 53, 1.4],
+            [54, 61, 1.6],
+            [62, 68, 1.8],
+            [69, 76, 2.0],
+            [77, 83, 2.2],
+            [84, 91, 2.4],
+            [92, 98, 2.6],
+            [99, 106, 2.8],
+            [107, 113, 3.0],
+            [114, 121, 3.2],
+            [122, 129, 3.4],
+            [130, 137, 3.6],
+            [138, 145, 3.8],
+            [146, 153, 4.0],
+            [154, 162, 4.2],
+            [163, 170, 4.4],
+            [171, 179, 4.6],
+            [180, 188, 4.8],
+            [189, 197, 5.0],
+            [198, 206, 5.2],
+            [207, 215, 5.4],
+            [216, 225, 5.6],
+            [226, 235, 5.8],
+            [236, 245, 6.0],
+            [246, 256, 6.2],
+            [257, 267, 6.4],
+            [268, 278, 6.6],
+            [279, 289, 6.8],
+            [290, 302, 7.0],
+            [303, 315, 7.2],
+            [316, 328, 7.4],
+            [329, 344, 7.6],
+            [345, 357, 7.8],
+            [358, 374, 8.0],
+            [375, 391, 8.2],
+            [392, Number.MAX_SAFE_INTEGER, 8.4]
+        ];
+
+        function signedDOffset(d) {
+            const absD = Math.abs(d);
+            const row = D_OFFSET_TABLE.find(([a, b]) => absD >= a && absD <= b);
+            const base = row ? row[2] : 0.0;
+            return d >= 0 ? base : -base;
+        }
+
+        function calculateK(isJunior, isImproving, gamesThisMonth) {
+            const maxK = (isJunior && isImproving) ? 40.0 : 20.0;
+            if (maxK * gamesThisMonth > K_CAP_TOTAL) return K_CAP_TOTAL / gamesThisMonth;
+            return maxK;
+        }
+
+        function singleIncrement(selfRating, opponentRating, result, isJunior, gamesThisMonth) {
+            if (!(gamesThisMonth > 0)) throw new Error("gamesThisMonth must be > 0");
+            const d = opponentRating - selfRating;
+            const dOffset = signedDOffset(d);
+
+            const scoreOffset =
+                result === "WIN" ? WIN_OFFSET :
+                    result === "DRAW" ? DRAW_OFFSET :
+                        LOSS_OFFSET;
+
+            const isImproving = (dOffset + scoreOffset) > 0.0;
+            const k = calculateK(isJunior, isImproving, gamesThisMonth);
+
+            return (dOffset + scoreOffset) * k / INCREMENT_DIVISOR;
+        }
+
+        function gameResult(p1Rating, p2Rating, p1Junior, p2Junior, resultP1, p1Games, p2Games) {
+            const p1Delta = singleIncrement(p1Rating, p2Rating, resultP1, p1Junior, p1Games);
+            const opposite =
+                resultP1 === "WIN" ? "LOSS" :
+                    resultP1 === "LOSS" ? "WIN" :
+                        "DRAW";
+            const p2Delta = singleIncrement(p2Rating, p1Rating, opposite, p2Junior, p2Games);
+            return { p1Delta, p2Delta };
+        }
+
+        const $ = (id) => document.getElementById(id);
+        const out = $("out");
+
+        function read() {
+            return {
+                p1Rating: parseInt($("p1Rating").value, 10),
+                p2Rating: parseInt($("p2Rating").value, 10),
+                p1Junior: $("p1Junior").value === "true",
+                p2Junior: $("p2Junior").value === "true",
+                resultP1: $("resultP1").value,
+                p1Games: parseInt($("p1Games").value, 10),
+                p2Games: parseInt($("p2Games").value, 10),
+            };
+        }
+
+        function fmt(x) {
+            const sign = x > 0 ? "+" : "";
+            return sign + x.toFixed(2);
+        }
+
+        $("calcBtn").addEventListener("click", () => {
+            try {
+                const v = read();
+                const r = gameResult(v.p1Rating, v.p2Rating, v.p1Junior, v.p2Junior, v.resultP1, v.p1Games, v.p2Games);
+                out.innerHTML =
+                    `<b>Player 1 delta:</b> ${fmt(r.p1Delta)}<br/>` +
+                    `<b>Player 2 delta:</b> ${fmt(r.p2Delta)}`;
+            } catch (e) {
+                out.textContent = e.message || String(e);
+            }
+        });
+    })();
+</script>
