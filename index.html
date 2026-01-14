@@ -1,65 +1,229 @@
-<div id="ecf-widget" style="max-width:720px;padding:16px;border:1px solid #ddd;border-radius:12px;">
-    <h3 style="margin:0 0 12px 0;">ECF K Rating Delta Calculator</h3>
+<div class="ecf-wrap">
+    <div id="ecf-widget" class="ecf-card">
+        <h3 class="ecf-title">ECF Rating Calculator</h3>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-            <label>Player 1 rating</label><br />
-            <input id="p1Rating" type="number" value="1680" style="width:100%;padding:8px;" />
-        </div>
-        <div>
-            <label>Player 2 rating</label><br />
-            <input id="p2Rating" type="number" value="1603" style="width:100%;padding:8px;" />
-        </div>
+        <div class="ecf-grid">
+            <div class="ecf-lane">
+                <div class="ecf-lane-title">Player 1</div>
 
-        <div>
-            <label>Player 1 junior</label><br />
-            <select id="p1Junior" style="width:100%;padding:8px;">
-                <option value="false" selected>No</option>
-                <option value="true">Yes</option>
-            </select>
-        </div>
-        <div>
-            <label>Player 2 junior</label><br />
-            <select id="p2Junior" style="width:100%;padding:8px;">
-                <option value="false" selected>No</option>
-                <option value="true">Yes</option>
-            </select>
-        </div>
+                <label class="ecf-label" for="p1Rating">Rating</label>
+                <input id="p1Rating" class="ecf-input" type="number" value="" />
 
-        <div>
-            <label>Result for Player 1</label><br />
-            <select id="resultP1" style="width:100%;padding:8px;">
-                <option value="WIN">Win</option>
-                <option value="DRAW">Draw</option>
-                <option value="LOSS">Loss</option>
-            </select>
-        </div>
-        <div>
-            <label>Games this month (Player 1)</label><br />
-            <input id="p1Games" type="number" min="1" value="1" style="width:100%;padding:8px;" />
+                <label class="ecf-label ecf-check">
+                    <input id="p1Junior" type="checkbox" />
+                    Junior
+                </label>
+
+                <label class="ecf-label" for="resultP1">Result for Player 1</label>
+                <select id="resultP1" class="ecf-select">
+                    <option value="WIN">Win</option>
+                    <option value="DRAW">Draw</option>
+                    <option value="LOSS">Loss</option>
+                </select>
+            </div>
+
+            <div class="ecf-lane">
+                <div class="ecf-lane-title">Player 2</div>
+
+                <label class="ecf-label" for="p2Rating">Rating</label>
+                <input id="p2Rating" class="ecf-input" type="number" value="" />
+
+                <label class="ecf-label ecf-check">
+                    <input id="p2Junior" type="checkbox" />
+                    Junior
+                </label>
+            </div>
         </div>
 
-        <div>
-            <label>Games this month (Player 2)</label><br />
-            <input id="p2Games" type="number" min="1" value="1" style="width:100%;padding:8px;" />
+        <div class="ecf-actions">
+            <button id="calcBtn" class="ecf-button" type="button">Calculate</button>
         </div>
 
-        <div style="display:flex;align-items:end;">
-            <button id="calcBtn"
-                style="width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;cursor:pointer;">
-                Calculate
-            </button>
+        <div id="out" class="ecf-output">Enter values and press Calculate.</div>
+
+        <div class="ecf-footnotes">
+            <div class="ecf-footnote">Assumption: Each player played fewer than 20 rated games this month.</div>
+            <div class="ecf-footnote">
+                Disclaimer: This is provided “as is” and we accept no responsibility or liability for any issues, loss,
+                or
+                damage arising from its use.
+            </div>
+            <p></p>
+            <div class="ecf-footnote">
+
+                Developed by: <a href="https://rating.englishchess.org.uk/players?ECF_code=312612C">Genc Tasbasi</a>
+            </div>
         </div>
-    </div>
-
-    <div id="out" style="margin-top:14px;padding:12px;border-radius:10px;background:#fafafa;">
-        Enter values and press Calculate.
-    </div>
-
-    <div style="margin-top:10px;font-size:12px;color:#555;">
-        Note: D offset table and K rules match the Kotlin code you posted.
     </div>
 </div>
+
+<style>
+    /* Center the entire UI */
+    .ecf-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 24px 12px;
+    }
+
+    .ecf-card {
+        width: 100%;
+        max-width: 820px;
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue",
+            sans-serif;
+    }
+
+    .ecf-title {
+        margin: 0 0 14px 0;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        text-align: center;
+    }
+
+    .ecf-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    @media (max-width: 720px) {
+        .ecf-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .ecf-lane {
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .ecf-lane-title {
+        font-weight: 700;
+        font-size: 14px;
+        margin-bottom: 10px;
+        color: rgba(0, 0, 0, 0.72);
+    }
+
+    .ecf-label {
+        display: block;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.70);
+        margin: 10px 0 6px 0;
+    }
+
+    .ecf-input,
+    .ecf-select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.16);
+        background: #fff;
+        outline: none;
+        font-size: 14px;
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .ecf-input:focus,
+    .ecf-select:focus {
+        border-color: rgba(25, 118, 210, 0.65);
+        box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.14);
+    }
+
+    .ecf-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+        user-select: none;
+    }
+
+    .ecf-check input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: rgb(242, 194, 75);
+    }
+
+    .ecf-actions {
+        display: flex;
+        justify-content: center;
+        margin: 16px 0 12px 0;
+    }
+
+    /* Button color: rgb(242, 194, 75) */
+    .ecf-button {
+        padding: 11px 18px;
+        min-width: 180px;
+        border: none;
+        border-radius: 999px;
+        background: rgb(242, 194, 75);
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+        transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+
+    .ecf-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+    }
+
+    .ecf-button:active {
+        transform: translateY(0px);
+        opacity: 0.92;
+    }
+
+    /* Result card light green */
+    .ecf-output {
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background: #e8f5e9;
+        padding: 12px 14px;
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    .ecf-out-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 6px 0;
+    }
+
+    .ecf-out-row+.ecf-out-row {
+        border-top: 1px solid rgba(0, 0, 0, 0.10);
+    }
+
+    .ecf-out-label {
+        color: rgba(0, 0, 0, 0.70);
+        font-weight: 700;
+    }
+
+    .ecf-out-value {
+        font-variant-numeric: tabular-nums;
+        font-weight: 900;
+    }
+
+    .ecf-footnotes {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .ecf-footnote {
+        font-size: 11px;
+        color: rgba(0, 0, 0, 0.55);
+        margin-top: 6px;
+    }
+</style>
 
 <script>
     (() => {
@@ -68,7 +232,6 @@
         const LOSS_OFFSET = -10.0;
 
         const INCREMENT_DIVISOR = 20.0;
-        const K_CAP_TOTAL = 700.0;
 
         const D_OFFSET_TABLE = [
             [0, 3, 0.0],
@@ -123,35 +286,28 @@
             return d >= 0 ? base : -base;
         }
 
-        function calculateK(isJunior, isImproving, gamesThisMonth) {
-            const maxK = (isJunior && isImproving) ? 40.0 : 20.0;
-            if (maxK * gamesThisMonth > K_CAP_TOTAL) return K_CAP_TOTAL / gamesThisMonth;
-            return maxK;
+        function kFactor(isJunior, isImproving) {
+            return isJunior && isImproving ? 40.0 : 20.0;
         }
 
-        function singleIncrement(selfRating, opponentRating, result, isJunior, gamesThisMonth) {
-            if (!(gamesThisMonth > 0)) throw new Error("gamesThisMonth must be > 0");
+        function singleIncrement(selfRating, opponentRating, result, isJunior) {
             const d = opponentRating - selfRating;
             const dOffset = signedDOffset(d);
 
-            const scoreOffset =
-                result === "WIN" ? WIN_OFFSET :
-                    result === "DRAW" ? DRAW_OFFSET :
-                        LOSS_OFFSET;
+            const scoreOffset = result === "WIN" ? WIN_OFFSET : result === "DRAW" ? DRAW_OFFSET : LOSS_OFFSET;
 
-            const isImproving = (dOffset + scoreOffset) > 0.0;
-            const k = calculateK(isJunior, isImproving, gamesThisMonth);
+            const isImproving = dOffset + scoreOffset > 0.0;
+            const k = kFactor(isJunior, isImproving);
 
-            return (dOffset + scoreOffset) * k / INCREMENT_DIVISOR;
+            return ((dOffset + scoreOffset) * k) / INCREMENT_DIVISOR;
         }
 
-        function gameResult(p1Rating, p2Rating, p1Junior, p2Junior, resultP1, p1Games, p2Games) {
-            const p1Delta = singleIncrement(p1Rating, p2Rating, resultP1, p1Junior, p1Games);
-            const opposite =
-                resultP1 === "WIN" ? "LOSS" :
-                    resultP1 === "LOSS" ? "WIN" :
-                        "DRAW";
-            const p2Delta = singleIncrement(p2Rating, p1Rating, opposite, p2Junior, p2Games);
+        function gameResult(p1Rating, p2Rating, p1Junior, p2Junior, resultP1) {
+            const p1Delta = singleIncrement(p1Rating, p2Rating, resultP1, p1Junior);
+
+            const opposite = resultP1 === "WIN" ? "LOSS" : resultP1 === "LOSS" ? "WIN" : "DRAW";
+
+            const p2Delta = singleIncrement(p2Rating, p1Rating, opposite, p2Junior);
             return { p1Delta, p2Delta };
         }
 
@@ -159,14 +315,19 @@
         const out = $("out");
 
         function read() {
+            const p1Rating = parseInt($("p1Rating").value, 10);
+            const p2Rating = parseInt($("p2Rating").value, 10);
+
+            if (!Number.isFinite(p1Rating) || !Number.isFinite(p2Rating)) {
+                throw new Error("Please enter valid ratings for both players.");
+            }
+
             return {
-                p1Rating: parseInt($("p1Rating").value, 10),
-                p2Rating: parseInt($("p2Rating").value, 10),
-                p1Junior: $("p1Junior").value === "true",
-                p2Junior: $("p2Junior").value === "true",
-                resultP1: $("resultP1").value,
-                p1Games: parseInt($("p1Games").value, 10),
-                p2Games: parseInt($("p2Games").value, 10),
+                p1Rating,
+                p2Rating,
+                p1Junior: $("p1Junior").checked,
+                p2Junior: $("p2Junior").checked,
+                resultP1: $("resultP1").value
             };
         }
 
@@ -175,13 +336,21 @@
             return sign + x.toFixed(2);
         }
 
+        function renderResult(r) {
+            out.innerHTML =
+                `<div class="ecf-out-row"><div class="ecf-out-label">Player 1 delta</div><div class="ecf-out-value">${fmt(
+                    r.p1Delta
+                )}</div></div>` +
+                `<div class="ecf-out-row"><div class="ecf-out-label">Player 2 delta</div><div class="ecf-out-value">${fmt(
+                    r.p2Delta
+                )}</div></div>`;
+        }
+
         $("calcBtn").addEventListener("click", () => {
             try {
                 const v = read();
-                const r = gameResult(v.p1Rating, v.p2Rating, v.p1Junior, v.p2Junior, v.resultP1, v.p1Games, v.p2Games);
-                out.innerHTML =
-                    `<b>Player 1 delta:</b> ${fmt(r.p1Delta)}<br/>` +
-                    `<b>Player 2 delta:</b> ${fmt(r.p2Delta)}`;
+                const r = gameResult(v.p1Rating, v.p2Rating, v.p1Junior, v.p2Junior, v.resultP1);
+                renderResult(r);
             } catch (e) {
                 out.textContent = e.message || String(e);
             }
