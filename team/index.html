@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Team Win Probability</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="ecf-wrap">
+        <div class="ecf-card">
+            <h1 class="ecf-title">Team Win Probability</h1>
+
+            <div class="ecf-grid">
+                <div class="ecf-lane">
+                    <div class="ecf-lane-title">Inputs</div>
+                    <div class="team-head">
+                        <div></div>
+                        <div>
+                            <div class="team-head-title">Team 1 ratings</div>
+                        </div>
+                        <div>
+                            <div class="team-head-title">Team 2 ratings</div>
+                        </div>
+                        <div></div>
+                    </div>
+
+
+                    <div class="rows" id="rows"></div>
+
+                    <div class="ecf-actions-col">
+                        <button class="ecf-button ecf-button-light" id="addBoardBtn" type="button">Add new
+                            board</button>
+                        <button class="ecf-button" id="submitBtn" type="button">Submit</button>
+                    </div>
+
+                    <div class="ecf-footnotes">
+                        <div class="ecf-footnote">Min 1 row, max 12 rows. Ratings 500 to 3000.</div>
+                        <div class="ecf-footnote">Missing player means 100 percent win for the other side.</div>
+                    </div>
+
+                    <div id="errorBox" class="err" style="display:none"></div>
+                </div>
+
+
+                <div class="ecf-lane">
+                    <div class="ecf-lane-title">Result</div>
+                    <div id="output" class="ecf-output">Fill ratings and press Submit.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
